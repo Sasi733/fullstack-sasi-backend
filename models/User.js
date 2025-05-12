@@ -14,6 +14,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+
+
+documents: [
+    {
+      type: String, // e.g., "/uploads/1681234567890-resume.pdf"
+    }
+  ],
+
+
+
 });
 
 module.exports = mongoose.model("User", userSchema);
