@@ -14,17 +14,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
-
-
-documents: [
+  documents: [
     {
-      type: String, // e.g., "/uploads/1681234567890-resume.pdf"
-    }
+      fileName: { type: String, required: true },
+      fileUrl: { type: String, required: true },
+      fileType: { type: String, enum: ["pdf", "certification"], default: "pdf" },
+      uploadedAt: { type: Date, default: Date.now },
+    },
   ],
-
-
-
 });
 
 module.exports = mongoose.model("User", userSchema);
