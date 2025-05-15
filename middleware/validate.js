@@ -1,26 +1,22 @@
 const { body, param, validationResult } = require("express-validator");
 
-const validate = (validations) => {
+const validate = (validations = []) => {
   return async (req, res, next) => {
+    if (!Array.isArray(validations)) {
+      console.error("❌ validate() expected array, got:", validations);
+      return next(new Error("Validation rules must be an array"));
+    }
+
     await Promise.all(validations.map((validation) => validation.run(req)));
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+
     next();
   };
 };
-
-const registerValidation = [
-  body("email").isEmail().withMessage("Invalid email"),
-  body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
-  body("phone").isMobilePhone().withMessage("Invalid phone number"),
-];
-
-const loginValidation = [
-  body("email").isEmail().withMessage("Invalid email"),
-  body("password").notEmpty().withMessage("Password is required"),
-];
 
 const uploadValidation = [
   body("email").isEmail().withMessage("Invalid email"),
@@ -33,8 +29,6 @@ const getDocsValidation = [
 
 module.exports = {
   validate,
-  registerValidation,
-  loginValidation,
   uploadValidation,
-  getDocsValidation,
+  getDocsValidation
 };
